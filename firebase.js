@@ -14,7 +14,7 @@ import {
 const firebaseConfig = {
   apiKey: "AIzaSyDNp0ZDnSSfYJ5_1kSTbP_gAxBnPH8pO84",
   authDomain: "online-suvidha-core.firebaseapp.com",
-  projectId: "https://online-suvidha-core-default-rtdb.asia-southeast1.firebasedatabase.app",
+  projectId: online-suvidha-core-default-rtdb.asia-southeast1.firebasedatabase.app",
   storageBucket: "online-suvidha-core.firebasestorage.app",
   messagingSenderId: "176597993994",
   appId: "1:176597993994:web:fb5b58dae1991bc6eb6df3"

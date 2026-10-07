@@ -1,15 +1,15 @@
 import { initializeApp } from
-"https://www.gstatic.com/firebasejs/12.0.0/firebase-app.js";
+"https://www.gstatic.com/firebasejs/12.19.0/firebase-app.js";
 
 import {
   getAuth
 } from
-"https://www.gstatic.com/firebasejs/12.0.0/firebase-auth.js";
+"https://www.gstatic.com/firebasejs/12.19.0/firebase-auth.js";
 
 import {
   getFirestore
 } from
-"https://www.gstatic.com/firebasejs/12.0.0/firebase-firestore.js";
+"https://www.gstatic.com/firebasejs/12.19.0/firebase-firestore.js";
 
 const firebaseConfig = {
   apiKey: "AIzaSyDNp0ZDnSSfYJ5_1kSTbP_gAxBnPH8pO84",

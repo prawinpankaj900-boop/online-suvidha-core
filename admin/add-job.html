@@ -1,0 +1,522 @@
+<!DOCTYPE html>
+<html lang="hi">
+
+<head>
+
+<meta charset="UTF-8">
+
+<meta name="viewport"
+content="width=device-width, initial-scale=1.0">
+
+<title>Add Job - ONLINE SUVIDHA CORE</title>
+
+<style>
+
+*{
+box-sizing:border-box;
+font-family:Arial,sans-serif;
+}
+
+body{
+margin:0;
+background:#f4f6fa;
+color:#172033;
+}
+
+header{
+background:#111827;
+color:white;
+padding:18px;
+text-align:center;
+}
+
+.container{
+max-width:700px;
+margin:25px auto;
+padding:20px;
+}
+
+.form-box{
+background:white;
+padding:25px;
+border-radius:15px;
+box-shadow:0 3px 15px #0001;
+}
+
+h2{
+margin-top:0;
+}
+
+label{
+display:block;
+font-weight:bold;
+margin-top:16px;
+margin-bottom:6px;
+}
+
+input,
+select,
+textarea{
+width:100%;
+padding:12px;
+border:1px solid #d0d5dd;
+border-radius:8px;
+font-size:15px;
+}
+
+textarea{
+min-height:120px;
+resize:vertical;
+}
+
+button{
+width:100%;
+margin-top:22px;
+padding:14px;
+background:#111827;
+color:white;
+border:none;
+border-radius:8px;
+font-size:16px;
+font-weight:bold;
+cursor:pointer;
+}
+
+button:disabled{
+opacity:.6;
+cursor:not-allowed;
+}
+
+#message{
+margin-top:15px;
+text-align:center;
+font-weight:bold;
+}
+
+.back{
+display:inline-block;
+margin-bottom:15px;
+text-decoration:none;
+color:#111827;
+font-weight:bold;
+}
+
+</style>
+
+</head>
+
+<body>
+
+<header>
+
+<h1>ONLINE SUVIDHA CORE</h1>
+<p>Admin — Add New Job</p>
+
+</header>
+
+<div class="container">
+
+<a class="back" href="dashboard.html">
+← Dashboard
+</a>
+
+<div class="form-box">
+
+<h2 id="pageTitle">
+नई सरकारी नौकरी जोड़ें
+</h2>
+
+
+<label>Job Category *</label>
+
+<select id="type">
+
+<option value="bihar">
+Bihar Government Job
+</option>
+
+<option value="central">
+Central Government Job
+</option>
+
+</select>
+
+
+<label>Job / Recruitment Name *</label>
+
+<input
+type="text"
+id="title"
+placeholder="जैसे BPSC Assistant Recruitment 2026">
+
+
+<label>Department / Organisation *</label>
+
+<input
+type="text"
+id="department"
+placeholder="जैसे Bihar Public Service Commission">
+
+
+<label>Qualification</label>
+
+<input
+type="text"
+id="qualification"
+placeholder="जैसे Graduate">
+
+
+<label>Total Vacancy</label>
+
+<input
+type="number"
+id="vacancy"
+placeholder="जैसे 500">
+
+
+<label>Age Limit</label>
+
+<input
+type="text"
+id="ageLimit"
+placeholder="जैसे 18-37 Years">
+
+
+<label>Application Start Date</label>
+
+<input
+type="date"
+id="startDate">
+
+
+<label>Last Date</label>
+
+<input
+type="date"
+id="lastDate">
+
+
+<label>Application Fee</label>
+
+<input
+type="text"
+id="applicationFee"
+placeholder="जैसे ₹100 / Category Wise">
+
+
+<label>Official Notification Link *</label>
+
+<input
+type="url"
+id="notificationLink"
+placeholder="https://...">
+
+
+<label>Official Apply Link *</label>
+
+<input
+type="url"
+id="applyLink"
+placeholder="https://...">
+
+
+<label>Short Description</label>
+
+<textarea
+id="description"
+placeholder="इस भर्ती की जरूरी जानकारी लिखें...">
+</textarea>
+
+
+<label>Status</label>
+
+<select id="status">
+
+<option value="published">
+Publish Now
+</option>
+
+<option value="draft">
+Save as Draft
+</option>
+
+</select>
+
+
+<button id="saveBtn">
+Publish Job
+</button>
+
+<div id="message"></div>
+
+</div>
+
+</div>
+
+
+<script type="module">
+
+import {
+auth,
+db
+} from "../firebase.js";
+
+
+import {
+onAuthStateChanged
+} from
+"https://www.gstatic.com/firebasejs/12.19.0/firebase-auth.js";
+
+
+import {
+collection,
+addDoc,
+doc,
+getDoc,
+serverTimestamp
+} from
+"https://www.gstatic.com/firebasejs/12.19.0/firebase-firestore.js";
+
+
+const message =
+document.getElementById("message");
+
+const saveBtn =
+document.getElementById("saveBtn");
+
+
+// URL से Bihar/Central चुनना
+
+const params =
+new URLSearchParams(window.location.search);
+
+const urlType =
+params.get("type");
+
+if(
+urlType === "bihar" ||
+urlType === "central"
+){
+
+document.getElementById("type").value =
+urlType;
+
+}
+
+
+// ADMIN CHECK
+
+onAuthStateChanged(auth, async (user) => {
+
+if(!user){
+
+window.location.href =
+"login.html";
+
+return;
+
+}
+
+try{
+
+const adminRef =
+doc(db,"admins",user.uid);
+
+const adminSnap =
+await getDoc(adminRef);
+
+if(!adminSnap.exists()){
+
+alert("Admin Access नहीं है।");
+
+window.location.href =
+"login.html";
+
+}
+
+}catch(error){
+
+message.textContent =
+"Admin verification में समस्या आई।";
+
+}
+
+});
+
+
+// SAVE JOB
+
+saveBtn.addEventListener(
+"click",
+async () => {
+
+const title =
+document.getElementById("title")
+.value.trim();
+
+const department =
+document.getElementById("department")
+.value.trim();
+
+const type =
+document.getElementById("type").value;
+
+const qualification =
+document.getElementById("qualification")
+.value.trim();
+
+const vacancy =
+document.getElementById("vacancy").value;
+
+const ageLimit =
+document.getElementById("ageLimit")
+.value.trim();
+
+const startDate =
+document.getElementById("startDate").value;
+
+const lastDate =
+document.getElementById("lastDate").value;
+
+const applicationFee =
+document.getElementById("applicationFee")
+.value.trim();
+
+const notificationLink =
+document.getElementById("notificationLink")
+.value.trim();
+
+const applyLink =
+document.getElementById("applyLink")
+.value.trim();
+
+const description =
+document.getElementById("description")
+.value.trim();
+
+const status =
+document.getElementById("status").value;
+
+
+// REQUIRED CHECK
+
+if(
+!title ||
+!department ||
+!notificationLink ||
+!applyLink
+){
+
+message.textContent =
+"⚠️ जरूरी जानकारी भरें।";
+
+return;
+
+}
+
+
+try{
+
+saveBtn.disabled = true;
+
+saveBtn.textContent =
+"Saving...";
+
+message.textContent = "";
+
+
+// FIRESTORE SAVE
+
+await addDoc(
+collection(db,"jobs"),
+{
+
+title:title,
+
+department:department,
+
+type:type,
+
+qualification:qualification,
+
+vacancy:
+vacancy ? Number(vacancy) : null,
+
+ageLimit:ageLimit,
+
+startDate:startDate,
+
+lastDate:lastDate,
+
+applicationFee:applicationFee,
+
+notificationLink:notificationLink,
+
+applyLink:applyLink,
+
+description:description,
+
+status:status,
+
+createdAt:serverTimestamp(),
+
+updatedAt:serverTimestamp()
+
+});
+
+
+// SUCCESS
+
+message.textContent =
+"✅ Job सफलतापूर्वक Save हो गई।";
+
+
+// FORM CLEAR
+
+document.getElementById("title").value = "";
+
+document.getElementById("department").value = "";
+
+document.getElementById("qualification").value = "";
+
+document.getElementById("vacancy").value = "";
+
+document.getElementById("ageLimit").value = "";
+
+document.getElementById("startDate").value = "";
+
+document.getElementById("lastDate").value = "";
+
+document.getElementById("applicationFee").value = "";
+
+document.getElementById("notificationLink").value = "";
+
+document.getElementById("applyLink").value = "";
+
+document.getElementById("description").value = "";
+
+}catch(error){
+
+console.error(error);
+
+message.textContent =
+"❌ Job Save नहीं हुई। Firebase settings check करें।";
+
+}
+
+finally{
+
+saveBtn.disabled = false;
+
+saveBtn.textContent =
+"Publish Job";
+
+}
+
+});
+
+</script>
+
+</body>
+
+</html>

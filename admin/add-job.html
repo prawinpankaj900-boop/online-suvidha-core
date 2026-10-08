@@ -2,11 +2,8 @@
 <html lang="hi">
 
 <head>
-
 <meta charset="UTF-8">
-
-<meta name="viewport"
-content="width=device-width, initial-scale=1.0">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
 
 <title>Add Job - ONLINE SUVIDHA CORE</title>
 
@@ -69,28 +66,43 @@ min-height:120px;
 resize:vertical;
 }
 
-button{
-width:100%;
+.buttons{
+display:grid;
+grid-template-columns:1fr 1fr;
+gap:12px;
 margin-top:22px;
+}
+
+button{
 padding:14px;
-background:#111827;
-color:white;
-border:none;
+border:0;
 border-radius:8px;
 font-size:16px;
 font-weight:bold;
 cursor:pointer;
 }
 
+.draft{
+background:#667085;
+color:white;
+}
+
+.publish{
+background:#087443;
+color:white;
+}
+
 button:disabled{
-opacity:.6;
+opacity:.5;
 cursor:not-allowed;
 }
 
 #message{
-margin-top:15px;
+margin-top:18px;
+padding:12px;
 text-align:center;
 font-weight:bold;
+border-radius:8px;
 }
 
 .back{
@@ -102,7 +114,6 @@ font-weight:bold;
 }
 
 </style>
-
 </head>
 
 <body>
@@ -110,9 +121,11 @@ font-weight:bold;
 <header>
 
 <h1>ONLINE SUVIDHA CORE</h1>
-<p>Admin — Add New Job</p>
+
+<p>Admin — नई सरकारी नौकरी जोड़ें</p>
 
 </header>
+
 
 <div class="container">
 
@@ -120,11 +133,10 @@ font-weight:bold;
 ← Dashboard
 </a>
 
+
 <div class="form-box">
 
-<h2 id="pageTitle">
-नई सरकारी नौकरी जोड़ें
-</h2>
+<h2>नई सरकारी भर्ती</h2>
 
 
 <label>Job Category *</label>
@@ -147,7 +159,8 @@ Central Government Job
 <input
 type="text"
 id="title"
-placeholder="जैसे BPSC Assistant Recruitment 2026">
+placeholder="जैसे BPSC Assistant Recruitment 2026"
+>
 
 
 <label>Department / Organisation *</label>
@@ -155,7 +168,8 @@ placeholder="जैसे BPSC Assistant Recruitment 2026">
 <input
 type="text"
 id="department"
-placeholder="जैसे Bihar Public Service Commission">
+placeholder="जैसे Bihar Public Service Commission"
+>
 
 
 <label>Qualification</label>
@@ -163,7 +177,8 @@ placeholder="जैसे Bihar Public Service Commission">
 <input
 type="text"
 id="qualification"
-placeholder="जैसे Graduate">
+placeholder="जैसे Graduate"
+>
 
 
 <label>Total Vacancy</label>
@@ -171,7 +186,8 @@ placeholder="जैसे Graduate">
 <input
 type="number"
 id="vacancy"
-placeholder="जैसे 500">
+placeholder="जैसे 500"
+>
 
 
 <label>Age Limit</label>
@@ -179,21 +195,24 @@ placeholder="जैसे 500">
 <input
 type="text"
 id="ageLimit"
-placeholder="जैसे 18-37 Years">
+placeholder="जैसे 18-37 Years"
+>
 
 
 <label>Application Start Date</label>
 
 <input
 type="date"
-id="startDate">
+id="startDate"
+>
 
 
-<label>Last Date</label>
+<label>Last Date *</label>
 
 <input
 type="date"
-id="lastDate">
+id="lastDate"
+>
 
 
 <label>Application Fee</label>
@@ -201,7 +220,8 @@ id="lastDate">
 <input
 type="text"
 id="applicationFee"
-placeholder="जैसे ₹100 / Category Wise">
+placeholder="जैसे ₹100 / Category Wise"
+>
 
 
 <label>Official Notification Link *</label>
@@ -209,7 +229,8 @@ placeholder="जैसे ₹100 / Category Wise">
 <input
 type="url"
 id="notificationLink"
-placeholder="https://...">
+placeholder="https://..."
+>
 
 
 <label>Official Apply Link *</label>
@@ -217,35 +238,41 @@ placeholder="https://...">
 <input
 type="url"
 id="applyLink"
-placeholder="https://...">
+placeholder="https://..."
+>
 
 
 <label>Short Description</label>
 
 <textarea
 id="description"
-placeholder="इस भर्ती की जरूरी जानकारी लिखें...">
-</textarea>
+placeholder="भर्ती की जरूरी जानकारी..."
+></textarea>
 
 
-<label>Status</label>
+<div class="buttons">
 
-<select id="status">
+<button
+type="button"
+class="draft"
+id="draftBtn">
 
-<option value="published">
-Publish Now
-</option>
+📝 Save as Draft
 
-<option value="draft">
-Save as Draft
-</option>
-
-</select>
-
-
-<button id="saveBtn">
-Publish Job
 </button>
+
+
+<button
+type="button"
+class="publish"
+id="publishBtn">
+
+🚀 Publish Job
+
+</button>
+
+</div>
+
 
 <div id="message"></div>
 
@@ -281,30 +308,19 @@ serverTimestamp
 const message =
 document.getElementById("message");
 
-const saveBtn =
-document.getElementById("saveBtn");
+const draftBtn =
+document.getElementById("draftBtn");
+
+const publishBtn =
+document.getElementById("publishBtn");
 
 
-// URL से Bihar/Central चुनना
-
-const params =
-new URLSearchParams(window.location.search);
-
-const urlType =
-params.get("type");
-
-if(
-urlType === "bihar" ||
-urlType === "central"
-){
-
-document.getElementById("type").value =
-urlType;
-
-}
+let currentUser = null;
 
 
-// ADMIN CHECK
+// ==========================
+// ADMIN LOGIN CHECK
+// ==========================
 
 onAuthStateChanged(auth, async (user) => {
 
@@ -317,38 +333,134 @@ return;
 
 }
 
+
 try{
 
 const adminRef =
-doc(db,"admins",user.uid);
+doc(
+db,
+"admins",
+user.uid
+);
 
 const adminSnap =
 await getDoc(adminRef);
 
+
 if(!adminSnap.exists()){
 
-alert("Admin Access नहीं है।");
+message.textContent =
+"❌ यह account Admin नहीं है।";
 
-window.location.href =
-"login.html";
+draftBtn.disabled = true;
+publishBtn.disabled = true;
+
+return;
 
 }
 
-}catch(error){
+
+currentUser = user;
 
 message.textContent =
-"Admin verification में समस्या आई।";
+"";
+
+}catch(error){
+
+console.error(error);
+
+message.textContent =
+"❌ Admin verification error: "
++ error.message;
 
 }
 
 });
 
 
-// SAVE JOB
+// ==========================
+// FORM DATA
+// ==========================
 
-saveBtn.addEventListener(
-"click",
-async () => {
+function getJobData(status){
+
+return {
+
+title:
+document.getElementById("title")
+.value.trim(),
+
+department:
+document.getElementById("department")
+.value.trim(),
+
+type:
+document.getElementById("type")
+.value,
+
+qualification:
+document.getElementById("qualification")
+.value.trim(),
+
+vacancy:
+document.getElementById("vacancy")
+.value
+?
+Number(
+document.getElementById("vacancy").value
+)
+:
+null,
+
+ageLimit:
+document.getElementById("ageLimit")
+.value.trim(),
+
+startDate:
+document.getElementById("startDate")
+.value,
+
+lastDate:
+document.getElementById("lastDate")
+.value,
+
+applicationFee:
+document.getElementById("applicationFee")
+.value.trim(),
+
+notificationLink:
+document.getElementById("notificationLink")
+.value.trim(),
+
+applyLink:
+document.getElementById("applyLink")
+.value.trim(),
+
+description:
+document.getElementById("description")
+.value.trim(),
+
+status: status,
+
+createdBy:
+currentUser.uid,
+
+createdAt:
+serverTimestamp(),
+
+updatedAt:
+serverTimestamp()
+
+};
+
+}
+
+
+// ==========================
+// VALIDATION
+// ==========================
+
+function validateJob(){
 
 const title =
 document.getElementById("title")
@@ -358,165 +470,177 @@ const department =
 document.getElementById("department")
 .value.trim();
 
-const type =
-document.getElementById("type").value;
-
-const qualification =
-document.getElementById("qualification")
-.value.trim();
-
-const vacancy =
-document.getElementById("vacancy").value;
-
-const ageLimit =
-document.getElementById("ageLimit")
-.value.trim();
-
-const startDate =
-document.getElementById("startDate").value;
-
-const lastDate =
-document.getElementById("lastDate").value;
-
-const applicationFee =
-document.getElementById("applicationFee")
-.value.trim();
-
-const notificationLink =
+const notification =
 document.getElementById("notificationLink")
 .value.trim();
 
-const applyLink =
+const apply =
 document.getElementById("applyLink")
 .value.trim();
 
-const description =
-document.getElementById("description")
-.value.trim();
 
-const status =
-document.getElementById("status").value;
-
-
-// REQUIRED CHECK
-
-if(
-!title ||
-!department ||
-!notificationLink ||
-!applyLink
-){
+if(!title){
 
 message.textContent =
-"⚠️ जरूरी जानकारी भरें।";
+"⚠️ Job का नाम भरें।";
+
+return false;
+
+}
+
+
+if(!department){
+
+message.textContent =
+"⚠️ Department भरें।";
+
+return false;
+
+}
+
+
+if(!notification){
+
+message.textContent =
+"⚠️ Official Notification Link डालें।";
+
+return false;
+
+}
+
+
+if(!apply){
+
+message.textContent =
+"⚠️ Official Apply Link डालें।";
+
+return false;
+
+}
+
+
+return true;
+
+}
+
+
+// ==========================
+// SAVE FUNCTION
+// ==========================
+
+async function saveJob(status){
+
+if(!currentUser){
+
+message.textContent =
+"❌ Admin login नहीं मिला।";
 
 return;
 
 }
 
 
+if(!validateJob()){
+
+return;
+
+}
+
+
+draftBtn.disabled = true;
+publishBtn.disabled = true;
+
+
+if(status === "published"){
+
+message.textContent =
+"🚀 Job Publish हो रही है...";
+
+}else{
+
+message.textContent =
+"📝 Draft save हो रहा है...";
+
+}
+
+
 try{
 
-saveBtn.disabled = true;
-
-saveBtn.textContent =
-"Saving...";
-
-message.textContent = "";
+const jobData =
+getJobData(status);
 
 
-// FIRESTORE SAVE
-
+const docRef =
 await addDoc(
 collection(db,"jobs"),
-{
+jobData
+);
 
-title:title,
 
-department:department,
+console.log(
+"Job saved:",
+docRef.id
+);
 
-type:type,
 
-qualification:qualification,
+if(status === "published"){
 
-vacancy:
-vacancy ? Number(vacancy) : null,
+message.textContent =
+"✅ Job सफलतापूर्वक Publish हो गई!";
 
-ageLimit:ageLimit,
+}else{
 
-startDate:startDate,
+message.textContent =
+"✅ Job Draft में Save हो गई!";
 
-lastDate:lastDate,
+}
 
-applicationFee:applicationFee,
 
-notificationLink:notificationLink,
+}catch(error){
 
-applyLink:applyLink,
+console.error(
+"FIREBASE ERROR:",
+error
+);
 
-description:description,
 
-status:status,
+message.textContent =
+"❌ Error: "
++ error.code
++ " | "
++ error.message;
 
-createdAt:serverTimestamp(),
+}
 
-updatedAt:serverTimestamp()
+
+draftBtn.disabled = false;
+publishBtn.disabled = false;
+
+}
+
+
+// ==========================
+// BUTTONS
+// ==========================
+
+draftBtn.addEventListener(
+"click",
+function(){
+
+saveJob("draft");
 
 });
 
 
-// SUCCESS
+publishBtn.addEventListener(
+"click",
+function(){
 
-message.textContent =
-"✅ Job सफलतापूर्वक Save हो गई।";
-
-
-// FORM CLEAR
-
-document.getElementById("title").value = "";
-
-document.getElementById("department").value = "";
-
-document.getElementById("qualification").value = "";
-
-document.getElementById("vacancy").value = "";
-
-document.getElementById("ageLimit").value = "";
-
-document.getElementById("startDate").value = "";
-
-document.getElementById("lastDate").value = "";
-
-document.getElementById("applicationFee").value = "";
-
-document.getElementById("notificationLink").value = "";
-
-document.getElementById("applyLink").value = "";
-
-document.getElementById("description").value = "";
-
-}catch(error){
-
-console.error("FIREBASE ERROR:", error);
-
-message.textContent =
-"❌ Error: " + error.code + " | " + error.message;
-
-}
-
-finally{
-
-saveBtn.disabled = false;
-
-saveBtn.textContent =
-"Publish Job";
-
-}
+saveJob("published");
 
 });
 
 </script>
 
 </body>
-
 </html>

@@ -497,10 +497,10 @@ document.getElementById("description").value = "";
 
 }catch(error){
 
-console.error(error);
+console.error("FIREBASE ERROR:", error);
 
 message.textContent =
-"❌ Job Save नहीं हुई। Firebase settings check करें।";
+"❌ Error: " + error.code + " | " + error.message;
 
 }
 

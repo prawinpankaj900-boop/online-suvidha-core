@@ -1,0 +1,406 @@
+<!DOCTYPE html>
+<html lang="hi">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+  <title>Government Jobs | Online Suvidha Core</title>
+
+  <style>
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      font-family: Arial, sans-serif;
+    }
+
+    body {
+      background: #f5f5f5;
+      color: #111;
+    }
+
+    header {
+      background: #111;
+      color: white;
+      padding: 20px;
+      text-align: center;
+    }
+
+    header h1 {
+      font-size: 26px;
+      margin-bottom: 6px;
+    }
+
+    header p {
+      color: #ccc;
+    }
+
+    .nav {
+      background: #222;
+      padding: 12px;
+      text-align: center;
+    }
+
+    .nav a {
+      color: white;
+      text-decoration: none;
+      margin: 0 10px;
+      font-size: 14px;
+    }
+
+    .container {
+      max-width: 1100px;
+      margin: 25px auto;
+      padding: 0 15px;
+    }
+
+    .title {
+      text-align: center;
+      margin-bottom: 20px;
+    }
+
+    .title h2 {
+      font-size: 25px;
+    }
+
+    .filter {
+      display: flex;
+      gap: 10px;
+      justify-content: center;
+      margin-bottom: 25px;
+      flex-wrap: wrap;
+    }
+
+    .filter button {
+      border: none;
+      padding: 11px 20px;
+      border-radius: 6px;
+      cursor: pointer;
+      background: #111;
+      color: white;
+      font-weight: bold;
+    }
+
+    .filter button:hover {
+      background: #333;
+    }
+
+    #jobsContainer {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+      gap: 18px;
+    }
+
+    .job-card {
+      background: white;
+      border-radius: 10px;
+      padding: 20px;
+      box-shadow: 0 3px 12px rgba(0,0,0,0.08);
+      border: 1px solid #ddd;
+    }
+
+    .job-card h3 {
+      font-size: 19px;
+      margin-bottom: 12px;
+    }
+
+    .job-card p {
+      margin: 7px 0;
+      font-size: 14px;
+      line-height: 1.5;
+    }
+
+    .badge {
+      display: inline-block;
+      padding: 5px 10px;
+      border-radius: 20px;
+      background: #111;
+      color: white;
+      font-size: 12px;
+      margin-bottom: 12px;
+    }
+
+    .buttons {
+      margin-top: 15px;
+      display: flex;
+      gap: 8px;
+      flex-wrap: wrap;
+    }
+
+    .buttons a {
+      text-decoration: none;
+      padding: 9px 14px;
+      border-radius: 5px;
+      font-size: 13px;
+      font-weight: bold;
+    }
+
+    .apply {
+      background: #111;
+      color: white;
+    }
+
+    .notification {
+      background: #eee;
+      color: #111;
+    }
+
+    .empty {
+      text-align: center;
+      padding: 40px;
+      background: white;
+      border-radius: 10px;
+    }
+
+    footer {
+      margin-top: 40px;
+      background: #111;
+      color: white;
+      text-align: center;
+      padding: 20px;
+    }
+
+    .loading {
+      text-align: center;
+      padding: 30px;
+    }
+  </style>
+</head>
+
+<body>
+
+<header>
+  <h1>ONLINE SUVIDHA CORE</h1>
+  <p>Government Jobs • Schemes • Forms • Certificates</p>
+</header>
+
+<div class="nav">
+  <a href="index.html">Home</a>
+  <a href="jobs.html">Government Jobs</a>
+</div>
+
+<div class="container">
+
+  <div class="title">
+    <h2>सरकारी नौकरी / Government Jobs</h2>
+    <p>Latest published government job notifications</p>
+  </div>
+
+  <div class="filter">
+    <button onclick="loadJobs('all')">All Jobs</button>
+    <button onclick="loadJobs('bihar')">Bihar Jobs</button>
+    <button onclick="loadJobs('central')">Central Jobs</button>
+  </div>
+
+  <div id="jobsContainer">
+    <div class="loading">
+      Jobs loading...
+    </div>
+  </div>
+
+</div>
+
+<footer>
+  <p>© 2026 Online Suvidha Core</p>
+  <p>Near Santi Boys Hostel, Back of Rose Garden, Mahatma Gandhi Nagar</p>
+</footer>
+
+
+<script type="module">
+
+  import { db } from "./firebase.js";
+
+  import {
+    collection,
+    getDocs,
+    query,
+    where,
+    orderBy
+  } from
+  "https://www.gstatic.com/firebasejs/12.19.0/firebase-firestore.js";
+
+
+  const jobsContainer =
+    document.getElementById("jobsContainer");
+
+
+  window.loadJobs = async function(type = "all") {
+
+    jobsContainer.innerHTML =
+      '<div class="loading">Jobs loading...</div>';
+
+    try {
+
+      let jobsQuery;
+
+      if (type === "all") {
+
+        jobsQuery = query(
+          collection(db, "jobs"),
+          where("status", "==", "published"),
+          orderBy("createdAt", "desc")
+        );
+
+      } else {
+
+        jobsQuery = query(
+          collection(db, "jobs"),
+          where("status", "==", "published"),
+          where("type", "==", type),
+          orderBy("createdAt", "desc")
+        );
+
+      }
+
+
+      const snapshot =
+        await getDocs(jobsQuery);
+
+
+      jobsContainer.innerHTML = "";
+
+
+      if (snapshot.empty) {
+
+        jobsContainer.innerHTML = `
+          <div class="empty">
+            <h3>अभी कोई Job उपलब्ध नहीं है</h3>
+            <p>नई Job notification जल्द यहाँ दिखाई देगी।</p>
+          </div>
+        `;
+
+        return;
+      }
+
+
+      snapshot.forEach((docSnap) => {
+
+        const job = docSnap.data();
+
+
+        const typeName =
+          job.type === "bihar"
+            ? "BIHAR GOVERNMENT"
+            : "CENTRAL GOVERNMENT";
+
+
+        const card = document.createElement("div");
+
+        card.className = "job-card";
+
+
+        card.innerHTML = `
+
+          <span class="badge">
+            ${typeName}
+          </span>
+
+          <h3>
+            ${job.title || "Government Job"}
+          </h3>
+
+          <p>
+            <strong>Department:</strong>
+            ${job.department || "N/A"}
+          </p>
+
+          <p>
+            <strong>Qualification:</strong>
+            ${job.qualification || "N/A"}
+          </p>
+
+          <p>
+            <strong>Vacancy:</strong>
+            ${job.vacancy || "N/A"}
+          </p>
+
+          <p>
+            <strong>Age Limit:</strong>
+            ${job.ageLimit || "N/A"}
+          </p>
+
+          <p>
+            <strong>Application Start:</strong>
+            ${job.startDate || "N/A"}
+          </p>
+
+          <p>
+            <strong>Last Date:</strong>
+            ${job.lastDate || "N/A"}
+          </p>
+
+          <p>
+            <strong>Application Fee:</strong>
+            ${job.applicationFee || "N/A"}
+          </p>
+
+          <div class="buttons">
+
+            ${
+              job.notificationLink
+              ? `
+                <a
+                  class="notification"
+                  href="${job.notificationLink}"
+                  target="_blank">
+                  Notification
+                </a>
+              `
+              : ""
+            }
+
+            ${
+              job.applyLink
+              ? `
+                <a
+                  class="apply"
+                  href="${job.applyLink}"
+                  target="_blank">
+                  Apply Online
+                </a>
+              `
+              : ""
+            }
+
+          </div>
+
+        `;
+
+
+        jobsContainer.appendChild(card);
+
+      });
+
+
+    } catch (error) {
+
+      console.error(error);
+
+      jobsContainer.innerHTML = `
+        <div class="empty">
+
+          <h3>Jobs load नहीं हो सकीं</h3>
+
+          <p>
+            कृपया थोड़ी देर बाद फिर कोशिश करें।
+          </p>
+
+          <p style="margin-top:10px;color:#777;">
+            ${error.message}
+          </p>
+
+        </div>
+      `;
+
+    }
+
+  };
+
+
+  // पहली बार सभी published jobs
+  loadJobs("all");
+
+</script>
+
+</body>
+</html>

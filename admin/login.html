@@ -71,10 +71,15 @@
       cursor: pointer;
     }
 
+    button:disabled {
+      opacity: 0.6;
+    }
+
     #message {
       margin-top: 15px;
       text-align: center;
       font-size: 14px;
+      font-weight: bold;
     }
   </style>
 </head>
@@ -84,28 +89,31 @@
 <div class="login-box">
 
   <h1>🔐 Admin Login</h1>
+  <p class="subtitle">ONLINE SUVIDHA CORE</p>
 
-  <p class="subtitle">
-    ONLINE SUVIDHA CORE
-  </p>
+  <form id="loginForm">
 
-  <label>Email</label>
-  <input
-    type="email"
-    id="email"
-    placeholder="Admin Email"
-  >
+    <label>Email</label>
+    <input
+      type="email"
+      id="email"
+      placeholder="Admin Email"
+      required
+    >
 
-  <label>Password</label>
-  <input
-    type="password"
-    id="password"
-    placeholder="Password"
-  >
+    <label>Password</label>
+    <input
+      type="password"
+      id="password"
+      placeholder="Password"
+      required
+    >
 
-  <button onclick="login()">
-    Login
-  </button>
+    <button type="submit" id="loginBtn">
+      Login
+    </button>
+
+  </form>
 
   <div id="message"></div>
 
@@ -117,10 +125,15 @@ import { auth } from "../firebase.js";
 
 import {
   signInWithEmailAndPassword
-} from
-"https://www.gstatic.com/firebasejs/12.0.0/firebase-auth.js";
+} from "https://www.gstatic.com/firebasejs/12.19.0/firebase-auth.js";
 
-window.login = async function () {
+const form = document.getElementById("loginForm");
+const message = document.getElementById("message");
+const loginBtn = document.getElementById("loginBtn");
+
+form.addEventListener("submit", async (event) => {
+
+  event.preventDefault();
 
   const email =
     document.getElementById("email").value.trim();
@@ -128,40 +141,41 @@ window.login = async function () {
   const password =
     document.getElementById("password").value;
 
-  const message =
-    document.getElementById("message");
+  message.textContent = "Login हो रहा है...";
 
-  if (!email || !password) {
-
-    message.textContent =
-      "Email और Password दोनों भरें।";
-
-    return;
-  }
+  loginBtn.disabled = true;
 
   try {
 
-    const user =
-      await signInWithEmailAndPassword(
-        auth,
-        email,
-        password
-      );
+    await signInWithEmailAndPassword(
+      auth,
+      email,
+      password
+    );
 
     message.textContent =
-      "Login सफल। Admin Panel खोला जा रहा है...";
+      "✅ Login सफल! Admin Panel खोला जा रहा है...";
 
-    window.location.href =
-      "dashboard.html";
+    setTimeout(() => {
+
+      window.location.href = "dashboard.html";
+
+    }, 700);
 
   } catch (error) {
 
+    console.error("Firebase Login Error:", error);
+
     message.textContent =
-      "Email या Password गलत है।";
+      "❌ Login Error: " + error.code;
+
+  } finally {
+
+    loginBtn.disabled = false;
 
   }
 
-};
+});
 
 </script>
 

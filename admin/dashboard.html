@@ -1,224 +1,378 @@
 <!DOCTYPE html>
 <html lang="hi">
+
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-  <title>Admin Dashboard - ONLINE SUVIDHA CORE</title>
+<meta charset="UTF-8">
 
-  <style>
-    * {
-      box-sizing: border-box;
-      margin: 0;
-      padding: 0;
-      font-family: Arial, sans-serif;
-    }
+<meta name="viewport"
+content="width=device-width, initial-scale=1.0">
 
-    body {
-      background: #f4f6fa;
-      color: #172033;
-    }
+<title>Admin Dashboard - ONLINE SUVIDHA CORE</title>
 
-    header {
-      background: #111827;
-      color: white;
-      padding: 18px;
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      gap: 15px;
-    }
+<style>
 
-    header h1 {
-      font-size: 21px;
-    }
+*{
+box-sizing:border-box;
+margin:0;
+padding:0;
+font-family:Arial,sans-serif;
+}
 
-    #logout {
-      background: white;
-      color: #111827;
-      border: none;
-      padding: 9px 14px;
-      border-radius: 7px;
-      font-weight: bold;
-      cursor: pointer;
-    }
+body{
+background:#f4f6fa;
+color:#172033;
+}
 
-    .container {
-      max-width: 1100px;
-      margin: auto;
-      padding: 25px 18px;
-    }
+header{
+background:#111827;
+color:white;
+padding:18px;
+display:flex;
+justify-content:space-between;
+align-items:center;
+gap:15px;
+}
 
-    .welcome {
-      margin-bottom: 25px;
-    }
+header h1{
+font-size:21px;
+}
 
-    .welcome h2 {
-      margin-bottom: 5px;
-    }
+#logout{
+background:white;
+color:#111827;
+border:none;
+padding:10px 15px;
+border-radius:7px;
+font-weight:bold;
+cursor:pointer;
+}
 
-    .welcome p {
-      color: #667085;
-    }
+#logout:disabled{
+opacity:.6;
+}
 
-    .cards {
-      display: grid;
-      grid-template-columns:
-        repeat(auto-fit, minmax(220px, 1fr));
-      gap: 16px;
-    }
+.container{
+max-width:1100px;
+margin:auto;
+padding:25px 18px;
+}
 
-    .card {
-      background: white;
-      padding: 25px;
-      border-radius: 13px;
-      box-shadow: 0 3px 12px #0001;
-    }
+.welcome{
+margin-bottom:25px;
+}
 
-    .card h3 {
-      margin-bottom: 8px;
-    }
+.welcome h2{
+margin-bottom:5px;
+}
 
-    .card p {
-      color: #667085;
-      margin-bottom: 18px;
-    }
+.welcome p{
+color:#667085;
+}
 
-    .btn {
-      display: inline-block;
-      width: 100%;
-      text-align: center;
-      padding: 11px;
-      background: #111827;
-      color: white;
-      text-decoration: none;
-      border-radius: 7px;
-      font-weight: bold;
-    }
+.cards{
+display:grid;
+grid-template-columns:
+repeat(auto-fit,minmax(220px,1fr));
+gap:16px;
+}
 
-    .danger {
-      background: #b42318;
-    }
-  </style>
+.card{
+background:white;
+padding:25px;
+border-radius:13px;
+box-shadow:0 3px 12px #0001;
+}
+
+.card h3{
+margin-bottom:8px;
+}
+
+.card p{
+color:#667085;
+margin-bottom:18px;
+}
+
+.btn{
+display:inline-block;
+width:100%;
+text-align:center;
+padding:11px;
+background:#111827;
+color:white;
+text-decoration:none;
+border-radius:7px;
+font-weight:bold;
+}
+
+.message{
+margin-top:20px;
+padding:12px;
+background:white;
+border-radius:8px;
+text-align:center;
+}
+
+</style>
+
 </head>
+
 
 <body>
 
+
 <header>
 
-  <h1>ONLINE SUVIDHA CORE — ADMIN</h1>
+<h1>
+ONLINE SUVIDHA CORE — ADMIN
+</h1>
 
-  <button id="logout">
-    Logout
-  </button>
+<button id="logout">
+Logout
+</button>
 
 </header>
 
+
 <div class="container">
 
-  <div class="welcome">
 
-    <h2>Admin Dashboard</h2>
+<div class="welcome">
 
-    <p>
-      यहाँ से वेबसाइट की सरकारी जानकारी और सेवाएँ manage करें।
-    </p>
+<h2>
+Admin Dashboard
+</h2>
 
-  </div>
-
-  <div class="cards">
-
-    <div class="card">
-      <h3>🟢 Bihar Jobs</h3>
-      <p>बिहार की नई सरकारी भर्ती जोड़ें।</p>
-
-      <a class="btn" href="add-job.html?type=bihar">
-        + Add Bihar Job
-      </a>
-    </div>
-
-    <div class="card">
-      <h3>🔵 Central Jobs</h3>
-      <p>केंद्र सरकार की भर्ती जोड़ें।</p>
-
-      <a class="btn" href="add-job.html?type=central">
-        + Add Central Job
-      </a>
-    </div>
-
-    <div class="card">
-      <h3>🟠 Bihar Schemes</h3>
-      <p>बिहार सरकार की योजना जोड़ें।</p>
-
-      <a class="btn" href="add-scheme.html?type=bihar">
-        + Add Bihar Scheme
-      </a>
-    </div>
-
-    <div class="card">
-      <h3>🟣 Central Schemes</h3>
-      <p>केंद्र सरकार की योजना जोड़ें।</p>
-
-      <a class="btn" href="add-scheme.html?type=central">
-        + Add Central Scheme
-      </a>
-    </div>
-
-    <div class="card">
-      <h3>📄 Services</h3>
-      <p>जाति, आय, निवास आदि सेवाएँ manage करें।</p>
-
-      <a class="btn" href="#">
-        Manage Services
-      </a>
-    </div>
-
-    <div class="card">
-      <h3>🔔 Latest Updates</h3>
-      <p>वेबसाइट का नया notice/update डालें।</p>
-
-      <a class="btn" href="#">
-        + Add Update
-      </a>
-    </div>
-
-  </div>
+<p>
+यहाँ से वेबसाइट की सरकारी जानकारी और सेवाएँ manage करें।
+</p>
 
 </div>
 
+
+<div class="cards">
+
+
+<div class="card">
+
+<h3>🟢 Bihar Jobs</h3>
+
+<p>
+बिहार की नई सरकारी भर्ती जोड़ें।
+</p>
+
+<a
+class="btn"
+href="add-job.html?type=bihar">
+
++ Add Bihar Job
+
+</a>
+
+</div>
+
+
+
+<div class="card">
+
+<h3>🔵 Central Jobs</h3>
+
+<p>
+केंद्र सरकार की भर्ती जोड़ें।
+</p>
+
+<a
+class="btn"
+href="add-job.html?type=central">
+
++ Add Central Job
+
+</a>
+
+</div>
+
+
+
+<div class="card">
+
+<h3>🟠 Bihar Schemes</h3>
+
+<p>
+बिहार सरकार की योजना जोड़ें।
+</p>
+
+<a
+class="btn"
+href="add-scheme.html?type=bihar">
+
++ Add Bihar Scheme
+
+</a>
+
+</div>
+
+
+
+<div class="card">
+
+<h3>🟣 Central Schemes</h3>
+
+<p>
+केंद्र सरकार की योजना जोड़ें।
+</p>
+
+<a
+class="btn"
+href="add-scheme.html?type=central">
+
++ Add Central Scheme
+
+</a>
+
+</div>
+
+
+
+<div class="card">
+
+<h3>📄 Services</h3>
+
+<p>
+जाति, आय, निवास आदि सेवाएँ manage करें।
+</p>
+
+<a
+class="btn"
+href="#">
+
+Manage Services
+
+</a>
+
+</div>
+
+
+
+<div class="card">
+
+<h3>🔔 Latest Updates</h3>
+
+<p>
+वेबसाइट का नया notice/update डालें।
+</p>
+
+<a
+class="btn"
+href="#">
+
++ Add Update
+
+</a>
+
+</div>
+
+
+</div>
+
+
+<div
+id="message"
+class="message">
+</div>
+
+
+</div>
+
+
 <script type="module">
 
-import { auth } from "../firebase.js";
 
 import {
-  onAuthStateChanged,
-  signOut
+auth
+} from "../firebase.js";
+
+
+import {
+onAuthStateChanged,
+signOut
 } from
-"https://www.gstatic.com/firebasejs/12.0.0/firebase-auth.js";
+"https://www.gstatic.com/firebasejs/12.19.0/firebase-auth.js";
 
-onAuthStateChanged(auth, (user) => {
 
-  if (!user) {
+const logoutButton =
+document.getElementById("logout");
 
-    window.location.href =
-      "login.html";
+const message =
+document.getElementById("message");
 
-  }
+
+// ==========================
+// CHECK LOGIN
+// ==========================
+
+onAuthStateChanged(
+auth,
+(user) => {
+
+if(!user){
+
+window.location.href =
+"login.html";
+
+return;
+
+}
+
+message.textContent =
+"✅ Admin logged in";
 
 });
 
-document
-  .getElementById("logout")
-  .addEventListener("click", async () => {
 
-    await signOut(auth);
+// ==========================
+// LOGOUT
+// ==========================
 
-    window.location.href =
-      "login.html";
+logoutButton.addEventListener(
+"click",
+async () => {
 
-  });
+logoutButton.disabled = true;
+
+logoutButton.textContent =
+"Logging out...";
+
+try{
+
+await signOut(auth);
+
+window.location.replace(
+"login.html"
+);
+
+}catch(error){
+
+console.error(error);
+
+message.textContent =
+"❌ Logout Error: "
++ error.code
++ " | "
++ error.message;
+
+logoutButton.disabled = false;
+
+logoutButton.textContent =
+"Logout";
+
+}
+
+});
+
 
 </script>
 
+
 </body>
+
 </html>

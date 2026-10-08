@@ -1,0 +1,329 @@
+<!DOCTYPE html>
+<html lang="hi">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Bihar Government Jobs | Online Suvidha Core</title>
+
+  <style>
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      font-family: Arial, sans-serif;
+    }
+
+    body {
+      background: #f5f5f5;
+      color: #111;
+    }
+
+    header {
+      background: #111;
+      color: white;
+      text-align: center;
+      padding: 22px 15px;
+    }
+
+    header h1 {
+      font-size: 26px;
+    }
+
+    header p {
+      margin-top: 6px;
+      color: #ccc;
+    }
+
+    nav {
+      background: #222;
+      padding: 12px;
+      text-align: center;
+    }
+
+    nav a {
+      color: white;
+      text-decoration: none;
+      margin: 0 10px;
+      font-size: 14px;
+    }
+
+    .container {
+      max-width: 1100px;
+      margin: 25px auto;
+      padding: 0 15px;
+    }
+
+    .heading {
+      text-align: center;
+      margin-bottom: 25px;
+    }
+
+    .heading h2 {
+      font-size: 26px;
+    }
+
+    .heading p {
+      margin-top: 7px;
+      color: #555;
+    }
+
+    #jobs {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+      gap: 18px;
+    }
+
+    .job {
+      background: white;
+      border: 1px solid #ddd;
+      border-radius: 10px;
+      padding: 20px;
+      box-shadow: 0 3px 12px rgba(0,0,0,.08);
+    }
+
+    .badge {
+      display: inline-block;
+      background: #111;
+      color: white;
+      padding: 5px 10px;
+      border-radius: 20px;
+      font-size: 12px;
+      margin-bottom: 12px;
+    }
+
+    .job h3 {
+      font-size: 19px;
+      margin-bottom: 12px;
+    }
+
+    .job p {
+      margin: 7px 0;
+      font-size: 14px;
+      line-height: 1.5;
+    }
+
+    .buttons {
+      display: flex;
+      gap: 8px;
+      flex-wrap: wrap;
+      margin-top: 15px;
+    }
+
+    .buttons a {
+      text-decoration: none;
+      padding: 9px 14px;
+      border-radius: 5px;
+      font-size: 13px;
+      font-weight: bold;
+    }
+
+    .apply {
+      background: #111;
+      color: white;
+    }
+
+    .notification {
+      background: #eee;
+      color: #111;
+    }
+
+    .message {
+      background: white;
+      padding: 35px;
+      text-align: center;
+      border-radius: 10px;
+    }
+
+    footer {
+      margin-top: 40px;
+      background: #111;
+      color: white;
+      text-align: center;
+      padding: 20px;
+    }
+  </style>
+</head>
+
+<body>
+
+<header>
+  <h1>ONLINE SUVIDHA CORE</h1>
+  <p>Government Jobs • Schemes • Forms • Certificates</p>
+</header>
+
+<nav>
+  <a href="index.html">Home</a>
+  <a href="bihar-jobs.html">Bihar Jobs</a>
+  <a href="jobs.html">All Jobs</a>
+</nav>
+
+<div class="container">
+
+  <div class="heading">
+    <h2>🇮🇳 Bihar Government Jobs</h2>
+    <p>बिहार सरकार की नवीनतम प्रकाशित सरकारी नौकरियाँ</p>
+  </div>
+
+  <div id="jobs">
+    <div class="message">
+      Jobs loading...
+    </div>
+  </div>
+
+</div>
+
+<footer>
+  <p>© 2026 Online Suvidha Core</p>
+  <p>Near Santi Boys Hostel, Back of Rose Garden, Mahatma Gandhi Nagar</p>
+</footer>
+
+<script type="module">
+
+  import { db } from "./firebase.js";
+
+  import {
+    collection,
+    getDocs,
+    query,
+    where,
+    orderBy
+  } from "https://www.gstatic.com/firebasejs/12.19.0/firebase-firestore.js";
+
+  const container = document.getElementById("jobs");
+
+  async function loadBiharJobs() {
+
+    try {
+
+      const q = query(
+        collection(db, "jobs"),
+        where("status", "==", "published"),
+        where("type", "==", "bihar"),
+        orderBy("createdAt", "desc")
+      );
+
+      const snapshot = await getDocs(q);
+
+      container.innerHTML = "";
+
+      if (snapshot.empty) {
+
+        container.innerHTML = `
+          <div class="message">
+            <h3>अभी कोई Bihar Job उपलब्ध नहीं है</h3>
+            <p>नई notification publish होने पर यहाँ दिखाई देगी।</p>
+          </div>
+        `;
+
+        return;
+      }
+
+      snapshot.forEach((docSnap) => {
+
+        const job = docSnap.data();
+
+        const card = document.createElement("div");
+
+        card.className = "job";
+
+        card.innerHTML = `
+
+          <span class="badge">
+            BIHAR GOVERNMENT
+          </span>
+
+          <h3>
+            ${job.title || "Government Job"}
+          </h3>
+
+          <p>
+            <strong>Department:</strong>
+            ${job.department || "N/A"}
+          </p>
+
+          <p>
+            <strong>Qualification:</strong>
+            ${job.qualification || "N/A"}
+          </p>
+
+          <p>
+            <strong>Vacancy:</strong>
+            ${job.vacancy || "N/A"}
+          </p>
+
+          <p>
+            <strong>Age Limit:</strong>
+            ${job.ageLimit || "N/A"}
+          </p>
+
+          <p>
+            <strong>Start Date:</strong>
+            ${job.startDate || "N/A"}
+          </p>
+
+          <p>
+            <strong>Last Date:</strong>
+            ${job.lastDate || "N/A"}
+          </p>
+
+          <p>
+            <strong>Application Fee:</strong>
+            ${job.applicationFee || "N/A"}
+          </p>
+
+          <div class="buttons">
+
+            ${
+              job.notificationLink
+              ? `
+                <a
+                  class="notification"
+                  href="${job.notificationLink}"
+                  target="_blank">
+                  Notification
+                </a>
+              `
+              : ""
+            }
+
+            ${
+              job.applyLink
+              ? `
+                <a
+                  class="apply"
+                  href="${job.applyLink}"
+                  target="_blank">
+                  Apply Online
+                </a>
+              `
+              : ""
+            }
+
+          </div>
+        `;
+
+        container.appendChild(card);
+
+      });
+
+    } catch (error) {
+
+      console.error(error);
+
+      container.innerHTML = `
+        <div class="message">
+          <h3>Jobs load नहीं हो सकीं</h3>
+          <p>${error.message}</p>
+        </div>
+      `;
+
+    }
+
+  }
+
+  loadBiharJobs();
+
+</script>
+
+</body>
+</html>

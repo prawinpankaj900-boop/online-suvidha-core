@@ -1,179 +1,224 @@
 <!DOCTYPE html>
 <html lang="hi">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-  <title>Admin Login - ONLINE SUVIDHA CORE</title>
+<meta charset="UTF-8">
 
-  <style>
-    * {
-      box-sizing: border-box;
-      margin: 0;
-      padding: 0;
-      font-family: Arial, sans-serif;
-    }
+<meta name="viewport"
+content="width=device-width, initial-scale=1.0">
 
-    body {
-      min-height: 100vh;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      background: #eef2f7;
-      padding: 20px;
-    }
+<title>Admin Login - ONLINE SUVIDHA CORE</title>
 
-    .login-box {
-      width: 100%;
-      max-width: 400px;
-      background: white;
-      padding: 30px;
-      border-radius: 15px;
-      box-shadow: 0 5px 25px #0002;
-    }
+<style>
 
-    h1 {
-      text-align: center;
-      font-size: 24px;
-      margin-bottom: 5px;
-    }
+*{
+  box-sizing:border-box;
+  font-family:Arial,sans-serif;
+}
 
-    .subtitle {
-      text-align: center;
-      color: #667085;
-      margin-bottom: 25px;
-    }
+body{
+  margin:0;
+  min-height:100vh;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  background:#eef2f7;
+  padding:20px;
+}
 
-    label {
-      display: block;
-      margin: 12px 0 6px;
-      font-weight: bold;
-    }
+.login-box{
+  width:100%;
+  max-width:400px;
+  background:white;
+  padding:30px;
+  border-radius:15px;
+  box-shadow:0 5px 25px #0002;
+}
 
-    input {
-      width: 100%;
-      padding: 13px;
-      border: 1px solid #ccd3df;
-      border-radius: 8px;
-      font-size: 15px;
-    }
+h1{
+  text-align:center;
+  margin-bottom:5px;
+}
 
-    button {
-      width: 100%;
-      margin-top: 20px;
-      padding: 13px;
-      border: none;
-      border-radius: 8px;
-      background: #111827;
-      color: white;
-      font-size: 16px;
-      font-weight: bold;
-      cursor: pointer;
-    }
+.subtitle{
+  text-align:center;
+  color:#667085;
+  margin-bottom:25px;
+}
 
-    button:disabled {
-      opacity: 0.6;
-    }
+label{
+  display:block;
+  margin:12px 0 6px;
+  font-weight:bold;
+}
 
-    #message {
-      margin-top: 15px;
-      text-align: center;
-      font-size: 14px;
-      font-weight: bold;
-    }
-  </style>
+input{
+  width:100%;
+  padding:13px;
+  border:1px solid #ccd3df;
+  border-radius:8px;
+  font-size:15px;
+}
+
+button{
+  width:100%;
+  margin-top:20px;
+  padding:13px;
+  border:0;
+  border-radius:8px;
+  background:#111827;
+  color:white;
+  font-size:16px;
+  font-weight:bold;
+  cursor:pointer;
+}
+
+button:disabled{
+  opacity:.6;
+}
+
+#message{
+  margin-top:15px;
+  text-align:center;
+  font-weight:bold;
+}
+
+</style>
+
 </head>
 
 <body>
 
 <div class="login-box">
 
-  <h1>🔐 Admin Login</h1>
-  <p class="subtitle">ONLINE SUVIDHA CORE</p>
+<h1>🔐 Admin Login</h1>
 
-  <form id="loginForm">
+<p class="subtitle">
+ONLINE SUVIDHA CORE
+</p>
 
-    <label>Email</label>
-    <input
-      type="email"
-      id="email"
-      placeholder="Admin Email"
-      required
-    >
+<form id="loginForm">
 
-    <label>Password</label>
-    <input
-      type="password"
-      id="password"
-      placeholder="Password"
-      required
-    >
+<label>Email</label>
 
-    <button type="submit" id="loginBtn">
-      Login
-    </button>
+<input
+type="email"
+id="email"
+placeholder="Admin Email"
+required
+>
 
-  </form>
+<label>Password</label>
 
-  <div id="message"></div>
+<input
+type="password"
+id="password"
+placeholder="Password"
+required
+>
+
+<button
+type="submit"
+id="loginBtn">
+Login
+</button>
+
+</form>
+
+<div id="message"></div>
 
 </div>
 
-<script type="module">
 
-import { auth } from "../firebase.js";
+<!-- Firebase -->
 
-import {
-  signInWithEmailAndPassword
-} from "https://www.gstatic.com/firebasejs/12.19.0/firebase-auth.js";
+<script src="https://www.gstatic.com/firebasejs/12.19.0/firebase-app-compat.js"></script>
 
-const form = document.getElementById("loginForm");
-const message = document.getElementById("message");
-const loginBtn = document.getElementById("loginBtn");
+<script src="https://www.gstatic.com/firebasejs/12.19.0/firebase-auth-compat.js"></script>
 
-form.addEventListener("submit", async (event) => {
+
+<script>
+
+const firebaseConfig = {
+
+  apiKey: "AIzaSyDNp0ZDnSSfYJ5_1kSTbP_gAxBnPH8pO84",
+
+  authDomain: "online-suvidha-core.firebaseapp.com",
+
+  projectId: "online-suvidha-core",
+
+  storageBucket: "online-suvidha-core.firebasestorage.app",
+
+  messagingSenderId: "176597993994",
+
+  appId: "1:176597993994:web:fb5b58dae1991bc6eb6df3"
+
+};
+
+
+firebase.initializeApp(firebaseConfig);
+
+const auth = firebase.auth();
+
+
+const form =
+document.getElementById("loginForm");
+
+const message =
+document.getElementById("message");
+
+const loginBtn =
+document.getElementById("loginBtn");
+
+
+form.addEventListener("submit", async function(event){
 
   event.preventDefault();
 
   const email =
-    document.getElementById("email").value.trim();
+  document.getElementById("email").value.trim();
 
   const password =
-    document.getElementById("password").value;
+  document.getElementById("password").value;
 
-  message.textContent = "Login हो रहा है...";
+
+  message.textContent =
+  "Login हो रहा है...";
 
   loginBtn.disabled = true;
 
-  try {
 
-    await signInWithEmailAndPassword(
-      auth,
+  try{
+
+    await auth.signInWithEmailAndPassword(
       email,
       password
     );
 
-    message.textContent =
-      "✅ Login सफल! Admin Panel खोला जा रहा है...";
-
-    setTimeout(() => {
-
-      window.location.href = "dashboard.html";
-
-    }, 700);
-
-  } catch (error) {
-
-    console.error("Firebase Login Error:", error);
 
     message.textContent =
-      "❌ Login Error: " + error.code;
+    "✅ Login सफल!";
 
-  } finally {
 
-    loginBtn.disabled = false;
+    setTimeout(function(){
+
+      window.location.href =
+      "dashboard.html";
+
+    },700);
+
+
+  }catch(error){
+
+    console.error(error);
+
+    message.textContent =
+    "❌ " + error.message;
 
   }
+
+
+  loginBtn.disabled = false;
 
 });
 
